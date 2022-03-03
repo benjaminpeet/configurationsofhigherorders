@@ -1,0 +1,126 @@
+   n:=7;;
+    m:=7;;
+    t:=3;;
+    s:=3 ;;
+    w:=2;;
+    P:=[1..n];;
+    A:=Combinations(P,t);;
+    B:=IteratorOfCombinations(A,m);;
+    LB:=Binomial(Binomial(n,t),m);;
+    C:=Combinations(P,w+1);;
+    F:=[];;
+    COUNT:=-1;
+    for I in B do
+            Y:=[];
+            COUNT:=COUNT+1;
+            Print("     ");
+            Print(Round(Float(100*COUNT/LB)));
+            STOP:=0;
+            for i in [1..m] do
+                UniteSet(Y,I[i]);
+            od;
+            if Length(Y)<n then
+                Donothing:=1;
+            else
+                D:=[1..Length(C)];
+                for k in [1..Length(C)] do
+                    D[k]:=0;
+                od;
+                S:=[1..n];
+                for k in [1..n] do
+                    S[k]:=0;
+                od;
+                for i in [1..m] do
+                    for k in [1..Length(C)] do
+                        if IsSubset(I[i],C[k]) then
+                            D[k]:=D[k]+1;
+                            if D[k]=2 then
+                                STOP:=1;
+                                break;
+                                break;
+                                
+                            fi;
+                        fi;
+                    od;
+                    for k in [1..n] do
+                        if IsSubset(I[i],[k]) then
+                            S[k]:=S[k]+1;
+                            if S[k]>s then
+                                STOP:=1;
+                                break;
+                                break;
+                                
+                            fi;
+                        fi;
+                    od;
+                od; 
+                if STOP=0 then
+                    U:=0;
+                    for k in [1..n] do
+                        if S[k]=s then
+                            U:=U+1;
+                        fi;
+                    od;
+                    if U=n then
+                        Add(F,I);
+                    fi;
+                fi;
+            fi;
+    od;
+    
+    
+    H:=F;;
+        G:=[H[1]];;
+    for j in [1..Length(H)] do
+        c:=0;;
+        for p in SymmetricGroup(n) do
+            Fs:=[];
+            for k in [1..m] do
+                Add(Fs,[]);
+            od;
+            for k in [1..m] do
+                for i in [1..t] do
+                    Fs[k][i]:=H[j][k][i]^p;
+                od;
+                Sort(Fs[k]);
+            od;
+            Sort(Fs);
+            for i in [1..Length(G)] do
+                if AsSet(Fs)=AsSet(G[i]) then
+                    c:=c+1;
+                fi;
+            od;
+        od;
+        if c=0 then
+            Add(G,H[j]);
+        fi;
+    od;
+    
+    GROUPS:=[];;
+    for j in [1..Length(G)] do
+        Add(GROUPS,[]);
+        for p in SymmetricGroup(n) do
+            Fs:=[];
+            for k in [1..m] do
+                Add(Fs,[]);
+            od;
+            for k in [1..m] do
+                for i in [1..t] do
+                    Fs[k][i]:=G[j][k][i]^p;
+                od;
+                Sort(Fs[k]);
+            od;
+            Sort(Fs);
+            c:=0;
+            for i in [1..m] do
+                if IsSubset(G[j],[Fs[i]]) then
+                    c:=c+1;
+                fi;
+            od;
+            if c=m then
+                Add(GROUPS[j],p);
+            fi;
+        od;
+    od;
+    G;
+    GROUPS;
